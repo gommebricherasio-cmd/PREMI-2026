@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficienza Meccanici 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="mechanic_data.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+
+<body class="p-8 min-h-screen">
+
+    <!-- Header -->
+    <header class="mb-8 flex justify-between items-center bg-slate-800 p-6 rounded-2xl border border-slate-700">
+        <div>
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                OFFICINA 2026
+            </h1>
+            <p class="text-slate-400">Analisi Efficienza & Produttività</p>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-slate-500">Mese Attuale</p>
+            <p class="text-2xl font-bold text-white" id="month-label">--</p>
+        </div>
+    </header>
+
+    <!-- Top Stats (Totals) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="card p-6">
+            <h3 class="text-slate-400 text-sm">Utile Mensile</h3>
+            <p class="text-4xl font-bold text-emerald-400 mt-2" id="val-utile">€ 0</p>
+        </div>
+        <div class="card p-6">
+            <h3 class="text-slate-400 text-sm">Ore Vendute Totali</h3>
+            <p class="text-4xl font-bold text-blue-400 mt-2" id="val-vendute">0</p>
+        </div>
+        <div class="card p-6 border-purple-500/30">
+            <h3 class="text-slate-400 text-sm">Premio Totale Team</h3>
+            <p class="text-4xl font-bold text-purple-400 mt-2" id="val-premio-tot">€ 0</p>
+        </div>
+    </div>
+
+    <!-- Mechanics Section -->
+    <h2 class="text-2xl font-bold mb-6 text-slate-200">Performance & Premi (Mensile)</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+
+        <!-- SIMONE -->
+        <div class="card p-6">
+            <h3 class="text-xl font-bold text-yellow-400 mb-2">SIMONE</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between border-b border-slate-700 pb-2">
+                    <span class="text-slate-400">Vendute Reali</span>
+                    <b class="text-white" id="simone-vend">0</b>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-slate-400">Premio</span>
+                    <span class="text-2xl font-bold text-emerald-400" id="simone-premio">€ 0</span>
+                </div>
+            </div>
+            <div id="gauge-simone" style="height: 200px; margin-top: 10px;"></div>
+        </div>
+
+        <!-- GIACOMO -->
+        <div class="card p-6">
+            <h3 class="text-xl font-bold text-cyan-400 mb-2">GIACOMO</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between border-b border-slate-700 pb-2">
+                    <span class="text-slate-400">Vendute Reali</span>
+                    <b class="text-white" id="giacomo-vend">0</b>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-slate-400">Premio</span>
+                    <span class="text-2xl font-bold text-emerald-400" id="giacomo-premio">€ 0</span>
+                </div>
+            </div>
+            <div id="gauge-giacomo" style="height: 200px; margin-top: 10px;"></div>
+        </div>
+
+        <!-- GABRIELE -->
+        <div class="card p-6">
+            <h3 class="text-xl font-bold text-purple-400 mb-2">GABRIELE</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between border-b border-slate-700 pb-2">
+                    <span class="text-slate-400">Vendute (Team)</span>
+                    <b class="text-white" id="gabriele-vend">0</b>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-slate-400">Premio</span>
+                    <span class="text-2xl font-bold text-emerald-400" id="gabriele-premio">€ 0</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-center h-[200px] text-slate-500 italic">
+                (Obiettivo Team > 270h)
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="card p-6">
+            <h3 class="text-lg font-semibold mb-4 text-slate-300">Confronto Premi Totali (Annuale)</h3>
+            <div id="chart-premi" style="height: 350px;"></div>
+        </div>
+        <div class="card p-6">
+            <h3 class="text-lg font-semibold mb-4 text-slate-300">Andamento Utile</h3>
+            <div id="chart-utile" style="height: 350px;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.mechanicData) return;
+            const data = window.mechanicData;
+            const latest = data.latest;
+
+            // Update Labels
+            document.getElementById('month-label').textContent = latest.month;
+            document.getElementById('val-utile').textContent = '€ ' + latest.totals.utile.toLocaleString('it-IT');
+            document.getElementById('val-vendute').textContent = latest.totals.vendute.toFixed(1);
+
+            // Safe check for total prize element
+            const elPremioTot = document.getElementById('val-premio-tot');
+            if (elPremioTot) elPremioTot.textContent = '€ ' + latest.totals.premio.toLocaleString('it-IT');
+
+            // Simone
+            document.getElementById('simone-vend').textContent = latest.simone.vendute.toFixed(1);
+            document.getElementById('simone-premio').textContent = '€ ' + latest.simone.premio.toLocaleString('it-IT');
+
+            // Giacomo
+            document.getElementById('giacomo-vend').textContent = latest.giacomo.vendute.toFixed(1);
+            document.getElementById('giacomo-premio').textContent = '€ ' + latest.giacomo.premio.toLocaleString('it-IT');
+
+            // Gabriele
+            document.getElementById('gabriele-vend').textContent = latest.gabriele.vendute.toFixed(1);
+            document.getElementById('gabriele-premio').textContent = '€ ' + latest.gabriele.premio.toLocaleString('it-IT');
+
+            // --- Gauges ---
+            function createGauge(domId, value, target, color) {
+                const chart = echarts.init(document.getElementById(domId));
+                chart.setOption({
+                    series: [{
+                        type: 'gauge',
+                        min: 0, max: Math.max(target * 1.3, 160),
+                        axisLine: { lineStyle: { width: 10, color: [[1, '#334155']] } },
+                        progress: { show: true, width: 10, itemStyle: { color: color } },
+                        pointer: { show: false },
+                        axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
+                        detail: { valueAnimation: true, formatter: '{value}h', fontSize: 20, color: '#fff', offsetCenter: [0, '0%'] },
+                        data: [{ value: value.toFixed(1) }]
+                    }]
+                });
+                return chart;
+            }
+            if (document.getElementById('gauge-simone')) createGauge('gauge-simone', latest.simone.vendute, 150, '#FACC15');
+            if (document.getElementById('gauge-giacomo')) createGauge('gauge-giacomo', latest.giacomo.vendute, 120, '#22D3EE');
+
+            // --- Chart (Premi Trend) ---
+            const chartPremi = echarts.init(document.getElementById('chart-premi'));
+            const optionPremi = {
+                tooltip: { trigger: 'axis' },
+                legend: { textStyle: { color: '#ccc' } },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: { type: 'category', data: data.months, axisLabel: { color: '#ccc' } },
+                yAxis: { type: 'value', axisLabel: { color: '#ccc' } },
+                series: [
+                    { name: 'Simone', type: 'line', smooth: true, data: data.simone.premio, itemStyle: { color: '#FACC15' } },
+                    { name: 'Giacomo', type: 'line', smooth: true, data: data.giacomo.premio, itemStyle: { color: '#22D3EE' } },
+                    { name: 'Gabriele', type: 'line', smooth: true, data: data.gabriele.premio, itemStyle: { color: '#C084FC' } }
+                ]
+            };
+            chartPremi.setOption(optionPremi);
+
+            // --- Line Chart (Utile) ---
+            const chartUtile = echarts.init(document.getElementById('chart-utile'));
+            chartUtile.setOption({
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: data.months, axisLabel: { color: '#ccc' } },
+                yAxis: { type: 'value', axisLabel: { color: '#ccc' } },
+                series: [{
+                    name: 'Utile', type: 'line', smooth: true,
+                    data: data.totals.utile,
+                    itemStyle: { color: '#10B981' },
+                    areaStyle: { opacity: 0.2 }
+                }]
+            });
+
+            window.addEventListener('resize', () => {
+                chartPremi.resize(); chartUtile.resize();
+            });
+        });
+    </script>
+</body>
+
+</html>
