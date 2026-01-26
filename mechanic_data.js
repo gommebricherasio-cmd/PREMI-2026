@@ -2,8 +2,8 @@ window.mechanicData = {
     "latest": {
         "month": "GEN",
         "totals": {
-            "vendute": 96.07,
-            "utile": 1973.72,
+            "vendute": 99.55,
+            "utile": 2021.21,
             "premio": 0.0
         },
         "simone": {
@@ -13,12 +13,12 @@ window.mechanicData = {
         },
         "giacomo": {
             "commessa": 0,
-            "vendute": 37.96,
+            "vendute": 41.44,
             "premio": 0.0
         },
         "gabriele": {
             "commessa": 0,
-            "vendute": 96.07,
+            "vendute": 99.55,
             "premio": 0.0
         }
     },
