@@ -216,6 +216,30 @@
                 }]
             });
 
+            // --- History Table Population ---
+            const tableBody = document.getElementById('history-table-body');
+            if (tableBody && data.months) {
+                tableBody.innerHTML = ''; // Clear existing
+                data.months.forEach((month, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-800 hover:bg-slate-800/50';
+
+                    const ut = data.totals.utile[index] || 0;
+                    const pSim = data.simone.premio[index] || 0;
+                    const pGia = data.giacomo.premio[index] || 0;
+                    const pGab = data.gabriele.premio[index] || 0;
+
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold">${month}</td>
+                        <td class="p-3 text-emerald-400">€ ${ut.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</td>
+                        <td class="p-3 text-yellow-400">€ ${pSim.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</td>
+                        <td class="p-3 text-cyan-400">€ ${pGia.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</td>
+                        <td class="p-3 text-purple-400">€ ${pGab.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+
             window.addEventListener('resize', () => {
                 chartPremi.resize(); chartUtile.resize();
             });
