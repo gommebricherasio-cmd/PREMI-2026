@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premi 2026 - Dashboard</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- Load Data -->
+    <script src="data.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            /* Slate 900 */
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            /* Slate 800 with opacity */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-8">
+
+    <!-- Header -->
+    <header class="mb-10 text-center">
+        <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+            DASHBOARD PREMI 2026
+        </h1>
+        <p class="text-slate-400 mt-2 text-lg">Ultimo aggiornamento: <span id="month-label"
+                class="font-semibold text-white">Caricamento...</span></p>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+
+        <!-- Gauge: Avanzamento Mensile -->
+        <div class="card p-6 flex flex-col items-center">
+            <h2 class="text-xl font-semibold text-slate-300 mb-4">Avanzamento Mensile</h2>
+            <div id="gauge-avanzamento" style="width: 100%; height: 250px;"></div>
+        </div>
+
+        <!-- Counter: Premialità Mensile (Was Dipendenti) -->
+        <div class="card p-6 flex flex-col items-center justify-center">
+            <h2 class="text-xl font-semibold text-slate-300 mb-2">Totale Premialità</h2>
+            <div class="flex-1 flex items-center justify-center">
+                <div class="text-center">
+                    <span id="counter-premialita" class="text-5xl font-bold text-blue-500">0</span>
+                    <p class="text-sm text-slate-500 mt-2">Mensile</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- New: Avanzamento Annuale -->
+        <div class="card p-6 flex flex-col items-center justify-center">
+            <h2 class="text-xl font-semibold text-slate-300 mb-2">Avanzamento Annuale</h2>
+            <div class="flex-1 flex items-center justify-center">
+                <div class="text-center">
+                    <span id="counter-annuale" class="text-5xl font-bold text-emerald-400">0%</span>
+                    <p class="text-sm text-slate-500 mt-2">Globale</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicator: Reclami -->
+        <div class="card p-6 flex flex-col items-center justify-center">
+            <h2 class="text-xl font-semibold text-slate-300 mb-4">Stato Reclami</h2>
+            <div id="gauge-reclami" style="width: 100%; height: 200px;"></div>
+            <p id="reclami-text" class="text-lg font-medium mt-2">--</p>
+        </div>
+
+        <!-- NEW: Annual Trend Chart -->
+        <div class="card p-6 col-span-1 md:col-span-2 lg:col-span-4">
+            <h2 class="text-xl font-semibold text-slate-300 mb-4">Andamento Annuale (2026)</h2>
+            <div id="chart-trend" style="width: 100%; height: 300px;"></div>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.dashboardData) {
+                alert("Errore: Dati non trovati. Assicurati che data.js sia generato.");
+                return;
+            }
+
+            const data = window.dashboardData;
+
+            // Convert % to 0-100 scale if it is 0.0-1.0
+            let avanzamentoVal = data.avanzamento;
+            if (avanzamentoVal <= 1 && avanzamentoVal >= -1) { // heuristics for decimal vs percent
+                avanzamentoVal = (avanzamentoVal * 100).toFixed(1);
+            }
+
+            // Update Text
+            document.getElementById('month-label').textContent = data.current_month;
+
+            // Update Annuale Text
+            document.getElementById('counter-annuale').textContent = data.avanzamento_annuale + "%";
+
+
+            // Animate Counter for Premialita
+            const counterEl = document.getElementById('counter-premialita');
+            let currentCount = 0;
+            const targetCount = data.premialita; // Changed from dipendenti
+
+            // Simple interval animation
+            if (targetCount > 0) {
+                const timer = setInterval(() => {
+                    currentCount += Math.ceil(targetCount / 50);
+                    if (currentCount >= targetCount) {
+                        currentCount = targetCount;
+                        clearInterval(timer);
+                    }
+                    counterEl.textContent = currentCount.toLocaleString();
+                }, 40);
+            } else {
+                counterEl.textContent = "0";
+            }
+
+
+            // --- ECharts: Gauge Avanzamento ---
+            const gaugeChart = echarts.init(document.getElementById('gauge-avanzamento'));
+            const optionGauge = {
+                series: [
+                    {
+                        type: 'gauge',
+                        startAngle: 180,
+                        endAngle: 0,
+                        min: 0,
+                        max: 130,
+                        splitNumber: 13,
+                        itemStyle: {
+                            color: '#58D9F9',
+                            shadowColor: 'rgba(0,138,255,0.45)',
+                            shadowBlur: 10,
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        },
+                        progress: { show: false },
+                        pointer: { itemStyle: { color: 'auto' } },
+                        axisLine: {
+                            roundCap: true,
+                            lineStyle: {
+                                width: 15,
+                                color: [
+                                    [0.0077, '#EF4444'], // 0 to 1 (1/130 ~= 0.0077) -> Red
+                                    [1, '#10B981']      // 1 to 130 -> Green
+                                ]
+                            }
+                        },
+                        axisTick: { show: false },
+                        splitLine: { length: 10, lineStyle: { width: 2, color: '#999' } },
+                        axisLabel: { distance: 20, color: '#999', fontSize: 10 },
+                        detail: {
+                            valueAnimation: true,
+                            fontSize: 30,
+                            offsetCenter: [0, '30%'],
+                            formatter: '{value}%',
+                            color: '#fff'
+                        },
+                        data: [{ value: avanzamentoVal }]
+                    }
+                ]
+            };
+            gaugeChart.setOption(optionGauge);
+
+
+            // --- ECharts: Reclami ---
+            const reclamiChart = echarts.init(document.getElementById('gauge-reclami'));
+            let reclamiColor = '#10B981';
+            if (data.reclami > 2) reclamiColor = '#F59E0B';
+            if (data.reclami > 5) reclamiColor = '#EF4444';
+
+            document.getElementById('reclami-text').textContent = `${data.reclami} RECLAMI`;
+            document.getElementById('reclami-text').style.color = reclamiColor;
+
+            const optionReclami = {
+                series: [
+                    {
+                        type: 'gauge',
+                        min: 0,
+                        max: 10,
+                        axisLine: {
+                            lineStyle: {
+                                width: 20,
+                                color: [[0.2, '#10B981'], [0.5, '#F59E0B'], [1, '#EF4444']]
+                            }
+                        },
+                        pointer: { itemStyle: { color: 'auto' } },
+                        axisTick: { distance: -20, length: 8, lineStyle: { color: '#fff', width: 2 } },
+                        splitLine: { distance: -20, length: 20, lineStyle: { color: '#fff', width: 4 } },
+                        axisLabel: { color: 'inherit', distance: 30, fontSize: 10 },
+                        detail: {
+                            valueAnimation: true,
+                            formatter: '{value}',
+                            color: 'inherit',
+                            fontSize: 25
+                        },
+                        data: [{ value: data.reclami }]
+                    }
+                ]
+            };
+            reclamiChart.setOption(optionReclami);
+
+
+            // --- ECharts: Annual Trend ---
+            const trendChart = echarts.init(document.getElementById('chart-trend'));
+
+            // Process data: Convert decimals to % and filter out placeholders (-1.0)
+            const trendData = data.history.avanzamento.map(val => {
+                if (val <= -0.99) return null; // Treat -1.0 or similar as empty
+                return (val * 100).toFixed(1);
+            });
+
+            // Cut off future months from the X axis labels if desired, or keep them empty.
+            // We'll keep all months but only show data for valid ones.
+            const months = data.history.months; // Includes "TOTALE 2026" at end usually, check length
+            // If the last element is TOTALE, we might want to exclude it from the line chart or keep it.
+            // Let's inspect data.js array length. 
+            // data.js has 13 elements in 'months' (Jan-Dec + Totale).
+            // data.js has 13 elements in 'avanzamento'.
+            // usually trend charts are 12 months. let's slice 0-12 for the months and data.
+
+            const displayMonths = months.slice(0, 12);
+            const displayData = trendData.slice(0, 12);
+
+            const optionTrend = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: '{b}: {c}%'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: displayMonths,
+                    axisLabel: { color: '#ccc' },
+                    axisLine: { lineStyle: { color: '#555' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: { formatter: '{value}%', color: '#ccc' },
+                    splitLine: { lineStyle: { color: '#333' } }
+                },
+                series: [
+                    {
+                        name: 'Avanzamento',
+                        type: 'line',
+                        smooth: true,
+                        data: displayData,
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        lineStyle: {
+                            width: 3,
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                                { offset: 0, color: '#3B82F6' },
+                                { offset: 1, color: '#10B981' }
+                            ])
+                        },
+                        areaStyle: {
+                            opacity: 0.3,
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(59, 130, 246, 0.5)' },
+                                { offset: 1, color: 'rgba(16, 185, 129, 0.1)' }
+                            ])
+                        },
+                        itemStyle: {
+                            color: '#10B981',
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }
+                    }
+                ]
+            };
+            trendChart.setOption(optionTrend);
+
+
+            // Resize listener
+            window.addEventListener('resize', () => {
+                gaugeChart.resize();
+                reclamiChart.resize();
+                trendChart.resize();
+            });
+        });
+    </script>
+</body>
+
+</html>
