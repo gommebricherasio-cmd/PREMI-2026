@@ -7,8 +7,12 @@ window.mechanicData = {
             "premio": 0.0
         }
     },
-    "months": [],
+    "months": [
+        "GEN"
+    ],
     "gabriele": {
-        "premio": []
+        "premio": [
+            0.0
+        ]
     }
 };
