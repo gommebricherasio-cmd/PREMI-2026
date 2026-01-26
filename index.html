@@ -72,6 +72,11 @@
                     <span class="text-slate-400">Premio</span>
                     <span class="text-2xl font-bold text-emerald-400" id="simone-premio">€ 0</span>
                 </div>
+                <!-- New Utile Row -->
+                <div class="flex justify-between items-center pt-2 border-t border-slate-700 mt-2">
+                    <span class="text-slate-400 text-sm">Utile Generato</span>
+                    <span class="text-lg font-semibold text-emerald-300" id="simone-utile">€ 0</span>
+                </div>
             </div>
             <div id="gauge-simone" style="height: 200px; margin-top: 10px;"></div>
         </div>
@@ -87,6 +92,11 @@
                 <div class="flex justify-between items-center pt-2">
                     <span class="text-slate-400">Premio</span>
                     <span class="text-2xl font-bold text-emerald-400" id="giacomo-premio">€ 0</span>
+                </div>
+                <!-- New Utile Row -->
+                <div class="flex justify-between items-center pt-2 border-t border-slate-700 mt-2">
+                    <span class="text-slate-400 text-sm">Utile Generato</span>
+                    <span class="text-lg font-semibold text-emerald-300" id="giacomo-utile">€ 0</span>
                 </div>
             </div>
             <div id="gauge-giacomo" style="height: 200px; margin-top: 10px;"></div>
@@ -141,10 +151,16 @@
             // Simone
             document.getElementById('simone-vend').textContent = latest.simone.vendute.toFixed(1);
             document.getElementById('simone-premio').textContent = '€ ' + latest.simone.premio.toLocaleString('it-IT');
+            if (latest.simone.utile !== undefined) {
+                document.getElementById('simone-utile').textContent = '€ ' + latest.simone.utile.toLocaleString('it-IT');
+            }
 
             // Giacomo
             document.getElementById('giacomo-vend').textContent = latest.giacomo.vendute.toFixed(1);
             document.getElementById('giacomo-premio').textContent = '€ ' + latest.giacomo.premio.toLocaleString('it-IT');
+            if (latest.giacomo.utile !== undefined) {
+                document.getElementById('giacomo-utile').textContent = '€ ' + latest.giacomo.utile.toLocaleString('it-IT');
+            }
 
             // Gabriele
             document.getElementById('gabriele-vend').textContent = latest.gabriele.vendute.toFixed(1);
