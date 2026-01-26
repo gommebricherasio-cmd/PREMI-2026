@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficienza Meccanici 2026 - Gabriele</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="data_gabriele.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+
+<body class="p-8 min-h-screen">
+
+    <!-- Header -->
+    <header class="mb-8 flex justify-between items-center bg-slate-800 p-6 rounded-2xl border border-slate-700">
+        <div>
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-300">
+                GABRIELE
+            </h1>
+            <p class="text-slate-400">Dashboard Personale 2026</p>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-slate-500">Mese Attuale</p>
+            <p class="text-2xl font-bold text-white" id="month-label">--</p>
+        </div>
+    </header>
+
+    <!-- Top Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="card p-6">
+            <h3 class="text-slate-400 text-sm">Ore Vendute (Team)</h3>
+            <p class="text-4xl font-bold text-white mt-2" id="gabriele-vend">0</p>
+        </div>
+        <div class="card p-6 border-purple-500/30">
+            <h3 class="text-slate-400 text-sm">Premio Maturato (Mese)</h3>
+            <p class="text-4xl font-bold text-purple-400 mt-2" id="gabriele-premio">€ 0</p>
+        </div>
+    </div>
+
+    <!-- Gauge -->
+    <div class="card p-6 mb-8">
+        <h3 class="text-lg font-semibold mb-4 text-slate-300">Obiettivo Team (>270h)</h3>
+        <div id="gauge-gabriele" style="height: 300px;"></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="card p-6">
+        <h3 class="text-lg font-semibold mb-4 text-slate-300">Andamento Premi (Annuale)</h3>
+        <div id="chart-premi" style="height: 350px;"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.mechanicData) return;
+            const data = window.mechanicData;
+            const latest = data.latest;
+
+            // Update Labels
+            document.getElementById('month-label').textContent = latest.month;
+
+            // Gabriele Vals
+            document.getElementById('gabriele-vend').textContent = latest.gabriele.vendute.toFixed(1);
+            document.getElementById('gabriele-premio').textContent = '€ ' + latest.gabriele.premio.toLocaleString('it-IT');
+
+            // --- Gauge ---
+            const gauge = echarts.init(document.getElementById('gauge-gabriele'));
+            gauge.setOption({
+                series: [{
+                    type: 'gauge',
+                    min: 0, max: 400,
+                    axisLine: { lineStyle: { width: 20, color: [[0.675, '#334155'], [1, '#C084FC']] } }, // 270/400 = 0.675
+                    progress: { show: true, width: 20, itemStyle: { color: '#C084FC' } },
+                    detail: { valueAnimation: true, formatter: '{value}h', fontSize: 40, color: '#fff', offsetCenter: [0, '20%'] },
+                    data: [{ value: latest.gabriele.vendute.toFixed(1) }]
+                }]
+            });
+
+            // --- Chart (Premi Trend) ---
+            const chartPremi = echarts.init(document.getElementById('chart-premi'));
+            chartPremi.setOption({
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: data.months, axisLabel: { color: '#ccc' } },
+                yAxis: { type: 'value', axisLabel: { color: '#ccc' } },
+                series: [
+                    { name: 'Premio', type: 'line', smooth: true, data: data.gabriele.premio, itemStyle: { color: '#C084FC' }, areaStyle: { opacity: 0.2 } }
+                ]
+            });
+
+            window.addEventListener('resize', () => {
+                gauge.resize(); chartPremi.resize();
+            });
+        });
+    </script>
+</body>
+
+</html>
