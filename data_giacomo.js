@@ -8,8 +8,12 @@ window.mechanicData = {
             "utile": 810.6700000000001
         }
     },
-    "months": [],
+    "months": [
+        "GEN"
+    ],
     "giacomo": {
-        "premio": []
+        "premio": [
+            0.0
+        ]
     }
 };
