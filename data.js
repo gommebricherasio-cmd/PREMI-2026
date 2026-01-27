@@ -39,17 +39,17 @@ window.dashboardData = {
         ],
         "premialita": [
             0.0,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
-            NaN,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
             NaN
         ]
     }
