@@ -3,7 +3,7 @@ window.mechanicData = {
         "month": "GEN",
         "gabriele": {
             "commessa": 0,
-            "vendute": 123.46,
+            "vendute": 124.06,
             "premio": 0.0
         }
     },
