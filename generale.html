@@ -72,6 +72,17 @@
             </div>
         </div>
 
+        <!-- NEW: Premio Annuale -->
+        <div class="card p-6 flex flex-col items-center justify-center">
+            <h2 class="text-xl font-semibold text-slate-300 mb-2">Premio Annuale</h2>
+            <div class="flex-1 flex items-center justify-center">
+                <div class="text-center">
+                    <span id="counter-premio-annuale" class="text-4xl font-bold text-yellow-400">€ 0</span>
+                    <p class="text-sm text-slate-500 mt-2">Totale</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Indicator: Reclami -->
         <div class="card p-6 flex flex-col items-center justify-center">
             <h2 class="text-xl font-semibold text-slate-300 mb-4">Stato Reclami</h2>
@@ -109,6 +120,11 @@
 
             // Update Annuale Text
             document.getElementById('counter-annuale').textContent = data.avanzamento_annuale + "%";
+
+            // Update Premio Annuale
+            if (data.premio_annuale !== undefined) {
+                document.getElementById('counter-premio-annuale').textContent = '€ ' + data.premio_annuale.toLocaleString('it-IT');
+            }
 
 
             // Animate Counter for Premialita
