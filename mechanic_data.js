@@ -24,17 +24,27 @@ window.mechanicData = {
             "premio": 0.0
         }
     },
-    "months": [],
+    "months": [
+        "GEN"
+    ],
     "simone": {
-        "premio": []
+        "premio": [
+            0.0
+        ]
     },
     "giacomo": {
-        "premio": []
+        "premio": [
+            0.0
+        ]
     },
     "gabriele": {
-        "premio": []
+        "premio": [
+            0.0
+        ]
     },
     "totals": {
-        "utile": []
+        "utile": [
+            1793.9500000000003
+        ]
     }
 };
