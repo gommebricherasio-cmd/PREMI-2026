@@ -3,9 +3,9 @@ window.mechanicData = {
         "month": "GEN",
         "giacomo": {
             "commessa": 0,
-            "vendute": 49.39333333333333,
+            "vendute": 50.473333333333336,
             "premio": 0.0,
-            "utile": 828.8600000000001
+            "utile": 819.2800000000001
         }
     },
     "months": [
