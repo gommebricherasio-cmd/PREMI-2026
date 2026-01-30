@@ -3,9 +3,9 @@ window.mechanicData = {
         "month": "GEN",
         "simone": {
             "commessa": 0,
-            "vendute": 74.66666666666667,
+            "vendute": 108.91000000000001,
             "premio": 0.0,
-            "utile": 894.5200000000001
+            "utile": 1555.0399999999997
         }
     },
     "months": [
@@ -15,5 +15,6 @@ window.mechanicData = {
         "premio": [
             0.0
         ]
-    }
+    },
+    "annual_premium": 0.0
 };
