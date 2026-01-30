@@ -2,25 +2,25 @@ window.mechanicData = {
     "latest": {
         "month": "GEN",
         "totals": {
-            "vendute": 125.14000000000001,
-            "utile": 1713.8000000000002,
+            "vendute": 183.48000000000002,
+            "utile": 2358.88,
             "premio": 0.0
         },
         "simone": {
             "commessa": 0,
-            "vendute": 74.66666666666667,
+            "vendute": 108.91000000000001,
             "premio": 0.0,
-            "utile": 894.5200000000001
+            "utile": 1555.0399999999997
         },
         "giacomo": {
             "commessa": 0,
-            "vendute": 50.473333333333336,
+            "vendute": 74.57000000000001,
             "premio": 0.0,
-            "utile": 819.2800000000001
+            "utile": 803.8399999999999
         },
         "gabriele": {
             "commessa": 0,
-            "vendute": 125.14000000000001,
+            "vendute": 183.48000000000002,
             "premio": 0.0
         }
     },
@@ -44,7 +44,8 @@ window.mechanicData = {
     },
     "totals": {
         "utile": [
-            1713.8000000000002
+            2358.88
         ]
-    }
+    },
+    "annual_premium": 0.0
 };
