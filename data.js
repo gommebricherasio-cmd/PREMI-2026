@@ -51,7 +51,7 @@ window.dashboardData = {
             0.0,
             0.0,
             0.0,
-            NaN
+            0.0
         ]
     }
 };
