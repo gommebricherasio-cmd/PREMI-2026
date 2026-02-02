@@ -9,8 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-    <!-- Load Data -->
-    <script src="data.js"></script>
+    <!-- Load Data with cache busting -->
+    <script src="data.js?v=20260202_2"></script>
     <style>
         body {
             background-color: #0f172a;
@@ -38,7 +38,7 @@
             DASHBOARD PREMI 2026
         </h1>
         <p class="text-slate-400 mt-2 text-lg">Ultimo aggiornamento: <span id="month-label"
-                class="font-semibold text-white">Caricamento...</span></p>
+                class="font-semibold text-white">Inizializzazione...</span></p>
     </header>
 
     <!-- Main Grid -->
@@ -121,251 +121,262 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            if (!window.dashboardData) {
-                alert("Errore: Dati non trovati. Assicurati che data.js sia generato.");
-                return;
-            }
+            try {
+                if (!window.dashboardData) {
+                    throw new Error("Dati non trovati. window.dashboardData è undefined. Verifica data.js.");
+                }
 
-            const data = window.dashboardData;
+                const data = window.dashboardData;
 
-            // Convert % to 0-100 scale if it is 0.0-1.0
-            let avanzamentoVal = data.avanzamento;
-            if (avanzamentoVal <= 1 && avanzamentoVal >= -1) { // heuristics for decimal vs percent
-                avanzamentoVal = (avanzamentoVal * 100).toFixed(1);
-            }
+                // Convert % to 0-100 scale if it is 0.0-1.0
+                let avanzamentoVal = data.avanzamento;
+                if (avanzamentoVal <= 1 && avanzamentoVal >= -1) { // heuristics for decimal vs percent
+                    avanzamentoVal = (avanzamentoVal * 100).toFixed(1);
+                }
 
-            // Update Text
-            document.getElementById('month-label').textContent = data.current_month;
+                // Update Text
+                const monthLabel = document.getElementById('month-label');
+                if (monthLabel) monthLabel.textContent = data.current_month;
 
-            // Update Annuale Text
-            document.getElementById('counter-annuale').textContent = data.avanzamento_annuale + "%";
+                // Update Annuale Text
+                const annualeEl = document.getElementById('counter-annuale');
+                if (annualeEl) annualeEl.textContent = data.avanzamento_annuale + "%";
 
-            // Update Premio Annuale
-            if (data.premio_annuale !== undefined) {
-                document.getElementById('counter-premio-annuale').textContent = '€ ' + data.premio_annuale.toLocaleString('it-IT');
-            }
-
-
-            // Animate Counter for Premialita
-            const counterEl = document.getElementById('counter-premialita');
-            let currentCount = 0;
-            const targetCount = data.premialita; // Changed from dipendenti
-
-            // Simple interval animation
-            if (targetCount > 0) {
-                const timer = setInterval(() => {
-                    currentCount += Math.ceil(targetCount / 50);
-                    if (currentCount >= targetCount) {
-                        currentCount = targetCount;
-                        clearInterval(timer);
-                    }
-                    counterEl.textContent = currentCount.toLocaleString();
-                }, 40);
-            } else {
-                counterEl.textContent = "0";
-            }
+                // Update Premio Annuale
+                const premioAnnualeEl = document.getElementById('counter-premio-annuale');
+                if (premioAnnualeEl && data.premio_annuale !== undefined) {
+                    premioAnnualeEl.textContent = '€ ' + data.premio_annuale.toLocaleString('it-IT');
+                }
 
 
-            // --- ECharts: Gauge Avanzamento ---
-            const gaugeChart = echarts.init(document.getElementById('gauge-avanzamento'));
-            const optionGauge = {
-                series: [
-                    {
-                        type: 'gauge',
-                        startAngle: 180,
-                        endAngle: 0,
-                        min: 0,
-                        max: 130,
-                        splitNumber: 13,
-                        itemStyle: {
-                            color: '#58D9F9',
-                            shadowColor: 'rgba(0,138,255,0.45)',
-                            shadowBlur: 10,
-                            shadowOffsetX: 2,
-                            shadowOffsetY: 2
-                        },
-                        progress: { show: false },
-                        pointer: { itemStyle: { color: 'auto' } },
-                        axisLine: {
-                            roundCap: true,
-                            lineStyle: {
-                                width: 15,
-                                color: [
-                                    [0.0077, '#EF4444'], // 0 to 1 (1/130 ~= 0.0077) -> Red
-                                    [1, '#10B981']      // 1 to 130 -> Green
-                                ]
+                // Animate Counter for Premialita
+                const counterEl = document.getElementById('counter-premialita');
+                if (counterEl) {
+                    let currentCount = 0;
+                    const targetCount = data.premialita; // Changed from dipendenti
+
+                    if (targetCount > 0) {
+                        const timer = setInterval(() => {
+                            currentCount += Math.ceil(targetCount / 50);
+                            if (currentCount >= targetCount) {
+                                currentCount = targetCount;
+                                clearInterval(timer);
                             }
-                        },
-                        axisTick: { show: false },
-                        splitLine: { length: 10, lineStyle: { width: 2, color: '#999' } },
-                        axisLabel: { distance: 20, color: '#999', fontSize: 10 },
-                        detail: {
-                            valueAnimation: true,
-                            fontSize: 30,
-                            offsetCenter: [0, '30%'],
-                            formatter: '{value}%',
-                            color: '#fff'
-                        },
-                        data: [{ value: avanzamentoVal }]
+                            counterEl.textContent = currentCount.toLocaleString();
+                        }, 40);
+                    } else {
+                        counterEl.textContent = "0";
                     }
-                ]
-            };
-            gaugeChart.setOption(optionGauge);
+                }
 
 
-            // --- ECharts: Reclami ---
-            const reclamiChart = echarts.init(document.getElementById('gauge-reclami'));
-            let reclamiColor = '#10B981';
-            if (data.reclami > 2) reclamiColor = '#F59E0B';
-            if (data.reclami > 5) reclamiColor = '#EF4444';
-
-            document.getElementById('reclami-text').textContent = `${data.reclami} RECLAMI`;
-            document.getElementById('reclami-text').style.color = reclamiColor;
-
-            const optionReclami = {
-                series: [
-                    {
-                        type: 'gauge',
-                        min: 0,
-                        max: 10,
-                        axisLine: {
-                            lineStyle: {
-                                width: 20,
-                                color: [[0.2, '#10B981'], [0.5, '#F59E0B'], [1, '#EF4444']]
+                // --- ECharts: Gauge Avanzamento ---
+                const gaugeEl = document.getElementById('gauge-avanzamento');
+                if (gaugeEl) {
+                    const gaugeChart = echarts.init(gaugeEl);
+                    const optionGauge = {
+                        series: [
+                            {
+                                type: 'gauge',
+                                startAngle: 180,
+                                endAngle: 0,
+                                min: 0,
+                                max: 130,
+                                splitNumber: 13,
+                                itemStyle: {
+                                    color: '#58D9F9',
+                                    shadowColor: 'rgba(0,138,255,0.45)',
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 2,
+                                    shadowOffsetY: 2
+                                },
+                                progress: { show: false },
+                                pointer: { itemStyle: { color: 'auto' } },
+                                axisLine: {
+                                    roundCap: true,
+                                    lineStyle: {
+                                        width: 15,
+                                        color: [
+                                            [0.0077, '#EF4444'], // 0 to 1 (1/130 ~= 0.0077) -> Red
+                                            [1, '#10B981']      // 1 to 130 -> Green
+                                        ]
+                                    }
+                                },
+                                axisTick: { show: false },
+                                splitLine: { length: 10, lineStyle: { width: 2, color: '#999' } },
+                                axisLabel: { distance: 20, color: '#999', fontSize: 10 },
+                                detail: {
+                                    valueAnimation: true,
+                                    fontSize: 30,
+                                    offsetCenter: [0, '30%'],
+                                    formatter: '{value}%',
+                                    color: '#fff'
+                                },
+                                data: [{ value: avanzamentoVal }]
                             }
+                        ]
+                    };
+                    gaugeChart.setOption(optionGauge);
+                }
+
+
+                // --- ECharts: Reclami ---
+                const reclamiEl = document.getElementById('gauge-reclami');
+                const reclamiTextEl = document.getElementById('reclami-text');
+                if (reclamiEl && reclamiTextEl) {
+                    const reclamiChart = echarts.init(reclamiEl);
+                    let reclamiColor = '#10B981';
+                    if (data.reclami > 2) reclamiColor = '#F59E0B';
+                    if (data.reclami > 5) reclamiColor = '#EF4444';
+
+                    reclamiTextEl.textContent = `${data.reclami} RECLAMI`;
+                    reclamiTextEl.style.color = reclamiColor;
+
+                    const optionReclami = {
+                        series: [
+                            {
+                                type: 'gauge',
+                                min: 0,
+                                max: 10,
+                                axisLine: {
+                                    lineStyle: {
+                                        width: 20,
+                                        color: [[0.2, '#10B981'], [0.5, '#F59E0B'], [1, '#EF4444']]
+                                    }
+                                },
+                                pointer: { itemStyle: { color: 'auto' } },
+                                axisTick: { distance: -20, length: 8, lineStyle: { color: '#fff', width: 2 } },
+                                splitLine: { distance: -20, length: 20, lineStyle: { color: '#fff', width: 4 } },
+                                axisLabel: { color: 'inherit', distance: 30, fontSize: 10 },
+                                detail: {
+                                    valueAnimation: true,
+                                    formatter: '{value}',
+                                    color: 'inherit',
+                                    fontSize: 25
+                                },
+                                data: [{ value: data.reclami }]
+                            }
+                        ]
+                    };
+                    reclamiChart.setOption(optionReclami);
+                }
+
+
+                // --- ECharts: Annual Trend ---
+                const trendEl = document.getElementById('chart-trend');
+                if (trendEl && data.history && data.history.avanzamento) {
+                    const trendChart = echarts.init(trendEl);
+
+                    // Process data: Convert decimals to % and filter out placeholders (-1.0)
+                    const trendData = data.history.avanzamento.map(val => {
+                        if (val <= -0.99) return null; // Treat -1.0 or similar as empty
+                        return (val * 100).toFixed(1);
+                    });
+
+                    const months = data.history.months;
+                    const displayMonths = months.slice(0, 12);
+                    const displayData = trendData.slice(0, 12);
+
+                    const optionTrend = {
+                        tooltip: {
+                            trigger: 'axis',
+                            formatter: '{b}: {c}%'
                         },
-                        pointer: { itemStyle: { color: 'auto' } },
-                        axisTick: { distance: -20, length: 8, lineStyle: { color: '#fff', width: 2 } },
-                        splitLine: { distance: -20, length: 20, lineStyle: { color: '#fff', width: 4 } },
-                        axisLabel: { color: 'inherit', distance: 30, fontSize: 10 },
-                        detail: {
-                            valueAnimation: true,
-                            formatter: '{value}',
-                            color: 'inherit',
-                            fontSize: 25
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
                         },
-                        data: [{ value: data.reclami }]
-                    }
-                ]
-            };
-            reclamiChart.setOption(optionReclami);
-
-
-            // --- ECharts: Annual Trend ---
-            const trendChart = echarts.init(document.getElementById('chart-trend'));
-
-            // Process data: Convert decimals to % and filter out placeholders (-1.0)
-            const trendData = data.history.avanzamento.map(val => {
-                if (val <= -0.99) return null; // Treat -1.0 or similar as empty
-                return (val * 100).toFixed(1);
-            });
-
-            // Cut off future months from the X axis labels if desired, or keep them empty.
-            // We'll keep all months but only show data for valid ones.
-            const months = data.history.months; // Includes "TOTALE 2026" at end usually, check length
-            // If the last element is TOTALE, we might want to exclude it from the line chart or keep it.
-            // Let's inspect data.js array length. 
-            // data.js has 13 elements in 'months' (Jan-Dec + Totale).
-            // data.js has 13 elements in 'avanzamento'.
-            // usually trend charts are 12 months. let's slice 0-12 for the months and data.
-
-            const displayMonths = months.slice(0, 12);
-            const displayData = trendData.slice(0, 12);
-
-            const optionTrend = {
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: '{b}: {c}%'
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: displayMonths,
-                    axisLabel: { color: '#ccc' },
-                    axisLine: { lineStyle: { color: '#555' } }
-                },
-                yAxis: {
-                    type: 'value',
-                    axisLabel: { formatter: '{value}%', color: '#ccc' },
-                    splitLine: { lineStyle: { color: '#333' } }
-                },
-                series: [
-                    {
-                        name: 'Avanzamento',
-                        type: 'line',
-                        smooth: true,
-                        data: displayData,
-                        symbol: 'circle',
-                        symbolSize: 8,
-                        lineStyle: {
-                            width: 3,
-                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                                { offset: 0, color: '#3B82F6' },
-                                { offset: 1, color: '#10B981' }
-                            ])
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: displayMonths,
+                            axisLabel: { color: '#ccc' },
+                            axisLine: { lineStyle: { color: '#555' } }
                         },
-                        areaStyle: {
-                            opacity: 0.3,
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                { offset: 0, color: 'rgba(59, 130, 246, 0.5)' },
-                                { offset: 1, color: 'rgba(16, 185, 129, 0.1)' }
-                            ])
+                        yAxis: {
+                            type: 'value',
+                            axisLabel: { formatter: '{value}%', color: '#ccc' },
+                            splitLine: { lineStyle: { color: '#333' } }
                         },
-                        itemStyle: {
-                            color: '#10B981',
-                            borderColor: '#fff',
-                            borderWidth: 2
-                        }
-                    }
-                ]
-            };
-            trendChart.setOption(optionTrend);
+                        series: [
+                            {
+                                name: 'Avanzamento',
+                                type: 'line',
+                                smooth: true,
+                                data: displayData,
+                                symbol: 'circle',
+                                symbolSize: 8,
+                                lineStyle: {
+                                    width: 3,
+                                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                                        { offset: 0, color: '#3B82F6' },
+                                        { offset: 1, color: '#10B981' }
+                                    ])
+                                },
+                                areaStyle: {
+                                    opacity: 0.3,
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                        { offset: 0, color: 'rgba(59, 130, 246, 0.5)' },
+                                        { offset: 1, color: 'rgba(16, 185, 129, 0.1)' }
+                                    ])
+                                },
+                                itemStyle: {
+                                    color: '#10B981',
+                                    borderColor: '#fff',
+                                    borderWidth: 2
+                                }
+                            }
+                        ]
+                    };
+                    trendChart.setOption(optionTrend);
 
+                    // Resize listener
+                    window.addEventListener('resize', () => {
+                        trendChart.resize();
+                    });
+                }
 
-            // Resize listener
-            trendChart.resize();
-        });
+                // --- Populate History Table ---
+                const tableBody = document.getElementById('history-table-body');
+                if (tableBody && data.history && data.history.months) {
+                    tableBody.innerHTML = ''; // Clear
 
-        // --- Populate History Table ---
-        const tableBody = document.getElementById('history-table-body');
-        if (tableBody && data.history && data.history.months) {
-            tableBody.innerHTML = ''; // Clear
+                    // Iterate through months
+                    data.history.months.forEach((month, index) => {
+                        const avanzVal = data.history.avanzamento[index];
+                        const premialitaVal = data.history.premialita[index];
 
-            // Iterate through months
-            data.history.months.forEach((month, index) => {
-                // Skip if "TOTALE" or similar if desirable, but keep for now
-                const avanzVal = data.history.avanzamento[index];
-                const premialitaVal = data.history.premialita[index];
+                        const tr = document.createElement('tr');
+                        tr.className = 'border-b border-slate-800 hover:bg-slate-800/50 transition-colors';
 
-                // Filter out invalid/empty rows if necessary (e.g. if Avanzamento is -1)
-                // if (avanzVal <= -0.99) return; 
+                        // Format Avanzamento %
+                        let avanzText = (avanzVal * 100).toFixed(1) + '%';
+                        let avanzClass = 'text-white';
+                        if (avanzVal > 0) avanzClass = 'text-emerald-400';
+                        else if (avanzVal < 0) avanzClass = 'text-red-400';
 
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-slate-800 hover:bg-slate-800/50 transition-colors';
+                        // Format Premialità
+                        let premText = '€ ' + (premialitaVal || 0).toLocaleString('it-IT');
 
-                // Format Avanzamento %
-                let avanzText = (avanzVal * 100).toFixed(1) + '%';
-                let avanzClass = 'text-white';
-                if (avanzVal > 0) avanzClass = 'text-emerald-400';
-                else if (avanzVal < 0) avanzClass = 'text-red-400';
+                        tr.innerHTML = `
+                                <td class="p-3 font-medium">${month}</td>
+                                <td class="p-3 ${avanzClass}">${avanzText}</td>
+                                <td class="p-3 text-blue-400 font-semibold">${premText}</td>
+                            `;
+                        tableBody.appendChild(tr);
+                    });
+                }
 
-                // Format Premialità
-                let premText = '€ ' + (premialitaVal || 0).toLocaleString('it-IT');
-
-                tr.innerHTML = `
-                        <td class="p-3 font-medium">${month}</td>
-                        <td class="p-3 ${avanzClass}">${avanzText}</td>
-                        <td class="p-3 text-blue-400 font-semibold">${premText}</td>
-                    `;
-                tableBody.appendChild(tr);
-            });
-        }
+            } catch (err) {
+                console.error("Dashboard Error:", err);
+                const errEl = document.getElementById('month-label');
+                if (errEl) {
+                    errEl.textContent = "ERRORE: " + err.message;
+                    errEl.style.color = '#EF4444'; // Red-500
+                }
+            }
         });
     </script>
 </body>
