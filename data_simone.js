@@ -1,20 +1,22 @@
 window.mechanicData = {
     "latest": {
-        "month": "GEN",
+        "month": "FEB",
         "simone": {
             "commessa": 0,
-            "vendute": 108.91000000000001,
+            "vendute": 0.0,
             "premio": 0.0,
-            "utile": 1555.0399999999997
+            "utile": 0.0
         }
     },
     "months": [
-        "GEN"
+        "GEN",
+        "FEB"
     ],
     "simone": {
         "premio": [
+            0.0,
             0.0
         ]
     },
-    "annual_premium": 0.0
+    "annual_premium": 639.91
 };
