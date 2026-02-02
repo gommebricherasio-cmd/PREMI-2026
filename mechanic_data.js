@@ -48,7 +48,7 @@ window.mechanicData = {
     },
     "totals": {
         "utile": [
-            2491.6499999999996,
+            2872.56,
             0.0
         ]
     },
