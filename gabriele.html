@@ -109,10 +109,12 @@
             gauge.setOption({
                 series: [{
                     type: 'gauge',
-                    min: 0, max: 400,
-                    axisLine: { lineStyle: { width: 20, color: [[0.675, '#334155'], [1, '#C084FC']] } }, // 270/400 = 0.675
-                    progress: { show: true, width: 20, itemStyle: { color: '#C084FC' } },
-                    detail: { valueAnimation: true, formatter: '{value}h', fontSize: 40, color: '#fff', offsetCenter: [0, '20%'] },
+                    min: 0, max: 300, // Team Target > 270
+                    axisLine: { lineStyle: { width: 15, color: [[1, '#334155']] } },
+                    progress: { show: true, width: 15, itemStyle: { color: '#C084FC' } }, // Purple
+                    pointer: { show: false },
+                    axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
+                    detail: { valueAnimation: true, formatter: '{value}h', fontSize: 30, color: '#fff', offsetCenter: [0, '0%'] },
                     data: [{ value: latest.gabriele.vendute.toFixed(1) }]
                 }]
             });
