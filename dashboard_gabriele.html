@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Gabriele 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="mechanic_data.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+
+<body class="p-8 min-h-screen">
+    <header class="mb-8 flex justify-between items-center bg-slate-800 p-6 rounded-2xl border border-cyan-500/30">
+        <div>
+            <h1 class="text-3xl font-bold text-violet-400">GABRIELE</h1>
+            <p class="text-slate-400">Dashboard Bonus & Obiettivi</p>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-slate-500">Mese Attuale</p>
+            <p class="text-2xl font-bold text-white" id="month-label">--</p>
+        </div>
+    </header>
+
+    <!-- KPI Totali -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="card p-6 border-violet-500/30">
+            <h3 class="text-slate-400 text-sm mb-1">Premio Totale Maturato</h3>
+            <p class="text-5xl font-bold text-emerald-400" id="val-premio">€ 0</p>
+            <p class="text-slate-500 text-xs mt-2">Dettagli qui sotto</p>
+        </div>
+        <div class="card p-6 border-violet-500/30">
+            <h3 class="text-slate-400 text-sm mb-1">Ore Totali (Simone + Giacomo)</h3>
+            <p class="text-5xl font-bold text-white" id="val-ore-tot">0</p>
+            <p class="text-slate-500 text-xs mt-2">Target Combinato: > 270 h</p>
+        </div>
+    </div>
+
+    <!-- Obiettivi Singoli -->
+    <h2 class="text-xl font-bold text-slate-300 mb-4">Stato Obiettivi Collaboratori</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+        <!-- Obiettivo Simone -->
+        <div class="card p-6" id="card-simone">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-semibold text-slate-200">Bonus Simone</h3>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-slate-700 text-slate-400" id="status-simone">IN
+                    CORSO</span>
+            </div>
+            <p class="text-sm text-slate-400">Se Simone raggiunge > 150h</p>
+            <p class="text-2xl font-bold text-white mt-2">€ 100</p>
+            <p class="text-sm text-slate-500 mt-1">Stato: <span id="hours-simone" class="text-slate-300">0h</span> /
+                150h</p>
+        </div>
+
+        <!-- Obiettivo Giacomo -->
+        <div class="card p-6" id="card-giacomo">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-semibold text-slate-200">Bonus Giacomo</h3>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-slate-700 text-slate-400" id="status-giacomo">IN
+                    CORSO</span>
+            </div>
+            <p class="text-sm text-slate-400">Se Giacomo raggiunge > 120h</p>
+            <p class="text-2xl font-bold text-white mt-2">€ 100</p>
+            <p class="text-sm text-slate-500 mt-1">Stato: <span id="hours-giacomo" class="text-slate-300">0h</span> /
+                120h</p>
+        </div>
+
+        <!-- Obiettivo Combinato -->
+        <div class="card p-6 border border-yellow-500/20" id="card-combined">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-semibold text-amber-200">Super Bonus Team</h3>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-slate-700 text-slate-400" id="status-combined">IN
+                    CORSO</span>
+            </div>
+            <p class="text-sm text-slate-400">Somma S+G > 270h</p>
+            <p class="text-2xl font-bold text-white mt-2">€ 350 + Bonus</p>
+            <p class="text-xs text-slate-500 mt-1">(+1.50€ per ogni ora extra)</p>
+            <div class="w-full bg-slate-700 rounded-full h-2.5 mt-4">
+                <div class="bg-amber-400 h-2.5 rounded-full" style="width: 0%" id="prog-combined"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Table -->
+    <div class="card p-6 mt-6">
+        <h3 class="text-xl font-bold text-slate-300 mb-4">Storico Mensile</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-slate-400 border-b border-slate-700">
+                        <th class="p-3">Mese</th>
+                        <th class="p-3">Ore Totali (S+G)</th>
+                        <th class="p-3">Premio</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body" class="text-slate-200">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.mechanicData) return;
+            const dataBase = window.mechanicData;
+            const data = dataBase.latest;
+            const S = data.simone;
+            const G = data.giacomo;
+            const Gab = data.gabriele;
+
+            document.getElementById('month-label').textContent = data.month;
+
+            // Totale Premio Gabriele
+            document.getElementById('val-premio').textContent = '€ ' + Gab.premio.toLocaleString('it-IT');
+
+            // Ore Totali S+G (che sono in Gab.vendute da script python)
+            const totalHours = Gab.vendute;
+            document.getElementById('val-ore-tot').textContent = totalHours.toFixed(2);
+
+            // --- Logic Simone ---
+            const elStatusS = document.getElementById('status-simone');
+            const elCardS = document.getElementById('card-simone');
+            document.getElementById('hours-simone').textContent = S.vendute.toFixed(1) + 'h';
+
+            if (S.vendute >= 150) {
+                elStatusS.textContent = "COMPLETATO";
+                elStatusS.className = "text-xs font-bold px-2 py-1 rounded bg-emerald-500/20 text-emerald-400";
+                elCardS.classList.add("border", "border-emerald-500/50");
+            }
+
+            // --- Logic Giacomo ---
+            const elStatusG = document.getElementById('status-giacomo');
+            const elCardG = document.getElementById('card-giacomo');
+            document.getElementById('hours-giacomo').textContent = G.vendute.toFixed(1) + 'h';
+
+            if (G.vendute >= 120) {
+                elStatusG.textContent = "COMPLETATO";
+                elStatusG.className = "text-xs font-bold px-2 py-1 rounded bg-emerald-500/20 text-emerald-400";
+                elCardG.classList.add("border", "border-emerald-500/50");
+            }
+
+            // --- Logic Combined ---
+            const targetCombined = 270;
+            const elStatusC = document.getElementById('status-combined');
+            const elCardC = document.getElementById('card-combined');
+            const progC = document.getElementById('prog-combined');
+
+            // Progress bar
+            let pct = (totalHours / targetCombined) * 100;
+            if (pct > 100) pct = 100;
+            progC.style.width = pct + "%";
+
+            if (totalHours > targetCombined) {
+                elStatusC.textContent = "SBLOCCATO";
+                elStatusC.className = "text-xs font-bold px-2 py-1 rounded bg-amber-500/20 text-amber-400";
+                elCardC.classList.remove("border-yellow-500/20");
+                elCardC.classList.add("border-amber-400", "shadow-lg", "shadow-amber-500/10");
+            }
+
+            // History Table Population
+            const tableBody = document.getElementById('history-table-body');
+            if (tableBody && dataBase.months) {
+                tableBody.innerHTML = '';
+                dataBase.months.forEach((month, index) => {
+                    const vend = dataBase.gabriele.vendute[index];
+                    const prem = dataBase.gabriele.premio[index];
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-800 hover:bg-slate-800/50';
+                    tr.innerHTML = `
+                        <td class="p-3 font-medium">${month}</td>
+                        <td class="p-3 font-bold text-white">${vend > 0 ? vend.toFixed(1) : '-'}</td>
+                        <td class="p-3 text-emerald-400 font-bold">${prem > 0 ? '€ ' + prem.toLocaleString('it-IT') : '-'}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
