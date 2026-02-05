@@ -54,10 +54,7 @@
             <h3 class="text-slate-400 text-sm">Premio Totale Team</h3>
             <p class="text-4xl font-bold text-purple-400 mt-2" id="val-premio-tot">€ 0</p>
         </div>
-        <div class="card p-6 border-yellow-500/30">
-            <h3 class="text-slate-400 text-sm">Premio Annuale</h3>
-            <p class="text-4xl font-bold text-yellow-400 mt-2" id="val-premio-annuo">€ 0</p>
-        </div>
+
     </div>
 
     <!-- Mechanics Section -->
@@ -173,11 +170,7 @@
             const elPremioTot = document.getElementById('val-premio-tot');
             if (elPremioTot) elPremioTot.textContent = '€ ' + latest.totals.premio.toLocaleString('it-IT');
 
-            // Annual Premium
-            const elPremioAnnuo = document.getElementById('val-premio-annuo');
-            if (elPremioAnnuo && data.annual_premium !== undefined) {
-                elPremioAnnuo.textContent = '€ ' + data.annual_premium.toLocaleString('it-IT');
-            }
+
 
             // Simone
             document.getElementById('simone-vend').textContent = latest.simone.vendute.toFixed(1);
