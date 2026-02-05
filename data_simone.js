@@ -16,6 +16,10 @@ window.mechanicData = {
         "premio": [
             0.0,
             0.0
+        ],
+        "vendute": [
+            133.93666666666667,
+            8.59
         ]
     },
     "annual_premium": 639.91
