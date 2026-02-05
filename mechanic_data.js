@@ -32,11 +32,19 @@ window.mechanicData = {
         "premio": [
             0.0,
             0.0
+        ],
+        "vendute": [
+            133.93666666666667,
+            8.59
         ]
     },
     "giacomo": {
         "premio": [
             0.0,
+            0.0
+        ],
+        "vendute": [
+            92.21333333333332,
             0.0
         ]
     },
@@ -44,6 +52,10 @@ window.mechanicData = {
         "premio": [
             0.0,
             0.0
+        ],
+        "vendute": [
+            226.14999999999998,
+            8.59
         ]
     },
     "totals": {
