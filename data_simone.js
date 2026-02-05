@@ -3,9 +3,9 @@ window.mechanicData = {
         "month": "FEB",
         "simone": {
             "commessa": 0,
-            "vendute": 5.1,
+            "vendute": 8.59,
             "premio": 0.0,
-            "utile": 71.17
+            "utile": 170.72
         }
     },
     "months": [
