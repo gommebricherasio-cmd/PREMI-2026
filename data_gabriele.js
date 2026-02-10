@@ -3,7 +3,7 @@ window.mechanicData = {
         "month": "FEB",
         "gabriele": {
             "commessa": 0,
-            "vendute": 24.9,
+            "vendute": 27.56,
             "premio": 0.0
         }
     },
@@ -18,7 +18,7 @@ window.mechanicData = {
         ],
         "vendute": [
             226.14999999999998,
-            24.9
+            27.56
         ]
     },
     "annual_premium": 639.91
