@@ -2,8 +2,8 @@ window.mechanicData = {
     "latest": {
         "month": "FEB",
         "totals": {
-            "vendute": 23.369999999999997,
-            "utile": 420.35,
+            "vendute": 24.9,
+            "utile": 308.74,
             "premio": 0.0
         },
         "simone": {
@@ -14,13 +14,13 @@ window.mechanicData = {
         },
         "giacomo": {
             "commessa": 0,
-            "vendute": 13.01,
+            "vendute": 14.54,
             "premio": 0.0,
-            "utile": 240.52999999999997
+            "utile": 128.91999999999996
         },
         "gabriele": {
             "commessa": 0,
-            "vendute": 23.369999999999997,
+            "vendute": 24.9,
             "premio": 0.0
         }
     },
@@ -45,7 +45,7 @@ window.mechanicData = {
         ],
         "vendute": [
             92.21333333333332,
-            13.01
+            14.54
         ]
     },
     "gabriele": {
@@ -55,13 +55,13 @@ window.mechanicData = {
         ],
         "vendute": [
             226.14999999999998,
-            23.369999999999997
+            24.9
         ]
     },
     "totals": {
         "utile": [
             2872.56,
-            420.35
+            308.74
         ]
     },
     "annual_premium": 639.91
