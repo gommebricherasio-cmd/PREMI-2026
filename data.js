@@ -1,12 +1,12 @@
 window.dashboardData = {
     "current_month": "FEBBRAIO",
-    "avanzamento": -38.9,
+    "avanzamento": -36.52,
     "premialita": 0,
-    "avanzamento_annuale": 6.4,
+    "avanzamento_annuale": 6.48,
     "premio_annuale": 639.91,
     "reclami": 3,
     "year_2025": 17896.0,
-    "year_2026": 11481.41,
+    "year_2026": 11929.29,
     "history": {
         "months": [
             "GENNAIO",
@@ -25,7 +25,7 @@ window.dashboardData = {
         ],
         "avanzamento": [
             0.1129772777410104,
-            -0.35843708091193566,
+            -0.3334102592758158,
             -1.0,
             -1.0,
             -1.0,
@@ -36,7 +36,7 @@ window.dashboardData = {
             -1.0,
             -1.0,
             -1.0,
-            -0.9327959751228023
+            -0.9319759869499069
         ],
         "premialita": [
             639.91,
