@@ -3,9 +3,9 @@ window.mechanicData = {
         "month": "FEB",
         "simone": {
             "commessa": 0,
-            "vendute": 59.79,
+            "vendute": 85.53999999999999,
             "premio": 0.0,
-            "utile": 1501.52
+            "utile": 1746.6699999999998
         }
     },
     "months": [
@@ -19,7 +19,7 @@ window.mechanicData = {
         ],
         "vendute": [
             133.93666666666667,
-            59.79
+            85.53999999999999
         ]
     },
     "annual_premium": 639.91
