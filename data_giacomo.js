@@ -3,9 +3,9 @@ window.mechanicData = {
         "month": "MAR",
         "giacomo": {
             "commessa": 0,
-            "vendute": 15.36,
+            "vendute": 49.60333333333333,
             "premio": 0.0,
-            "utile": 298.16
+            "utile": 627.87
         }
     },
     "months": [
@@ -21,8 +21,8 @@ window.mechanicData = {
         ],
         "vendute": [
             92.21333333333332,
-            109.72999999999999,
-            15.36
+            111.95666666666668,
+            49.60333333333333
         ]
     },
     "annual_premium": 639.91
