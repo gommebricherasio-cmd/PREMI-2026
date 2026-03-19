@@ -2,25 +2,25 @@ window.mechanicData = {
     "latest": {
         "month": "MAR",
         "totals": {
-            "vendute": 40.92,
-            "utile": 248.41000000000003,
+            "vendute": 93.41,
+            "utile": 924.04,
             "premio": 0.0
         },
         "simone": {
             "commessa": 0,
-            "vendute": 25.560000000000002,
+            "vendute": 43.80666666666667,
             "premio": 0.0,
-            "utile": -49.75
+            "utile": 296.16999999999996
         },
         "giacomo": {
             "commessa": 0,
-            "vendute": 15.36,
+            "vendute": 49.60333333333333,
             "premio": 0.0,
-            "utile": 298.16
+            "utile": 627.87
         },
         "gabriele": {
             "commessa": 0,
-            "vendute": 40.92,
+            "vendute": 93.41,
             "premio": 0.0
         }
     },
@@ -37,8 +37,8 @@ window.mechanicData = {
         ],
         "vendute": [
             133.93666666666667,
-            87.83999999999999,
-            25.560000000000002
+            89.61333333333333,
+            43.80666666666667
         ]
     },
     "giacomo": {
@@ -49,8 +49,8 @@ window.mechanicData = {
         ],
         "vendute": [
             92.21333333333332,
-            109.72999999999999,
-            15.36
+            111.95666666666668,
+            49.60333333333333
         ]
     },
     "gabriele": {
@@ -61,15 +61,15 @@ window.mechanicData = {
         ],
         "vendute": [
             226.14999999999998,
-            197.57,
-            40.92
+            201.57,
+            93.41
         ]
     },
     "totals": {
         "utile": [
             2872.56,
-            3166.3199999999997,
-            248.41000000000003
+            3279.7700000000004,
+            924.04
         ]
     },
     "annual_premium": 639.91
