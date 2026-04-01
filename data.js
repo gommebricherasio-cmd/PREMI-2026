@@ -4,7 +4,7 @@ window.dashboardData = {
     "premialita": 0,
     "avanzamento_annuale": 11.96,
     "premio_annuale": 639.91,
-    "reclami": 1,
+    "reclami": 2,
     "year_2025": 23690.0,
     "year_2026": 22221.08,
     "history": {
