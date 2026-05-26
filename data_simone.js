@@ -3,9 +3,9 @@ window.mechanicData = {
         "month": "MAG",
         "simone": {
             "commessa": 0,
-            "vendute": 34.11,
+            "vendute": 43.42,
             "premio": 0.0,
-            "utile": 974.79
+            "utile": 1339.49
         }
     },
     "months": [
@@ -28,7 +28,7 @@ window.mechanicData = {
             89.61333333333333,
             96.33,
             126.47,
-            34.11
+            43.42
         ]
     },
     "annual_premium": 639.91
