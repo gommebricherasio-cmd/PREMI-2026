@@ -1,26 +1,26 @@
 window.mechanicData = {
     "latest": {
-        "month": "MAG",
+        "month": "GIU",
         "totals": {
-            "vendute": 139.24,
-            "utile": 3688.4699999999993,
+            "vendute": 0.0,
+            "utile": 0.0,
             "premio": 0.0
         },
         "simone": {
             "commessa": 0,
-            "vendute": 100.16,
+            "vendute": 0.0,
             "premio": 0.0,
-            "utile": 3134.8200000000006
+            "utile": 0.0
         },
         "giacomo": {
             "commessa": 0,
-            "vendute": 39.08,
+            "vendute": 0.0,
             "premio": 0.0,
-            "utile": 553.6500000000001
+            "utile": 0.0
         },
         "gabriele": {
             "commessa": 0,
-            "vendute": 139.24,
+            "vendute": 0.0,
             "premio": 0.0
         }
     },
@@ -29,10 +29,12 @@ window.mechanicData = {
         "FEB",
         "MAR",
         "APR",
-        "MAG"
+        "MAG",
+        "GIU"
     ],
     "simone": {
         "premio": [
+            0.0,
             0.0,
             0.0,
             0.0,
@@ -44,7 +46,8 @@ window.mechanicData = {
             89.61333333333333,
             96.33,
             126.47,
-            100.16
+            143.82999999999998,
+            0.0
         ]
     },
     "giacomo": {
@@ -53,6 +56,7 @@ window.mechanicData = {
             0.0,
             0.0,
             202.54000000000002,
+            0.0,
             0.0
         ],
         "vendute": [
@@ -60,7 +64,8 @@ window.mechanicData = {
             111.95666666666668,
             107.49,
             154.18,
-            39.08
+            74.09000000000002,
+            0.0
         ]
     },
     "gabriele": {
@@ -69,6 +74,7 @@ window.mechanicData = {
             0.0,
             0.0,
             465.97499999999997,
+            0.0,
             0.0
         ],
         "vendute": [
@@ -76,7 +82,8 @@ window.mechanicData = {
             201.57,
             203.82,
             280.65,
-            139.24
+            217.92000000000002,
+            0.0
         ]
     },
     "totals": {
@@ -85,7 +92,8 @@ window.mechanicData = {
             3279.7700000000004,
             3753.61,
             3655.51,
-            3688.4699999999993
+            5466.26,
+            0.0
         ]
     },
     "annual_premium": 639.91
