@@ -1,11 +1,11 @@
 window.mechanicData = {
     "latest": {
-        "month": "MAG",
+        "month": "GIU",
         "giacomo": {
             "commessa": 0,
-            "vendute": 39.08,
+            "vendute": 0.0,
             "premio": 0.0,
-            "utile": 553.6500000000001
+            "utile": 0.0
         }
     },
     "months": [
@@ -13,7 +13,8 @@ window.mechanicData = {
         "FEB",
         "MAR",
         "APR",
-        "MAG"
+        "MAG",
+        "GIU"
     ],
     "giacomo": {
         "premio": [
@@ -21,6 +22,7 @@ window.mechanicData = {
             0.0,
             0.0,
             202.54000000000002,
+            0.0,
             0.0
         ],
         "vendute": [
@@ -28,7 +30,8 @@ window.mechanicData = {
             111.95666666666668,
             107.49,
             154.18,
-            39.08
+            74.09000000000002,
+            0.0
         ]
     },
     "annual_premium": 639.91
