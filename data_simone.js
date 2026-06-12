@@ -1,11 +1,11 @@
 window.mechanicData = {
     "latest": {
-        "month": "MAG",
+        "month": "GIU",
         "simone": {
             "commessa": 0,
-            "vendute": 100.16,
+            "vendute": 0.0,
             "premio": 0.0,
-            "utile": 3134.8200000000006
+            "utile": 0.0
         }
     },
     "months": [
@@ -13,10 +13,12 @@ window.mechanicData = {
         "FEB",
         "MAR",
         "APR",
-        "MAG"
+        "MAG",
+        "GIU"
     ],
     "simone": {
         "premio": [
+            0.0,
             0.0,
             0.0,
             0.0,
@@ -28,7 +30,8 @@ window.mechanicData = {
             89.61333333333333,
             96.33,
             126.47,
-            100.16
+            143.82999999999998,
+            0.0
         ]
     },
     "annual_premium": 639.91
