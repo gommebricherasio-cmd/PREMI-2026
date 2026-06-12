@@ -1,9 +1,9 @@
 window.mechanicData = {
     "latest": {
-        "month": "MAG",
+        "month": "GIU",
         "gabriele": {
             "commessa": 0,
-            "vendute": 139.24,
+            "vendute": 0.0,
             "premio": 0.0
         }
     },
@@ -12,7 +12,8 @@ window.mechanicData = {
         "FEB",
         "MAR",
         "APR",
-        "MAG"
+        "MAG",
+        "GIU"
     ],
     "gabriele": {
         "premio": [
@@ -20,6 +21,7 @@ window.mechanicData = {
             0.0,
             0.0,
             465.97499999999997,
+            0.0,
             0.0
         ],
         "vendute": [
@@ -27,7 +29,8 @@ window.mechanicData = {
             201.57,
             203.82,
             280.65,
-            139.24
+            217.92000000000002,
+            0.0
         ]
     },
     "annual_premium": 639.91
